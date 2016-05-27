@@ -3,6 +3,9 @@ package org.springframework.social.canvas;
 import javax.inject.Inject;
 
 import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.FacebookProfile;
+import org.springframework.social.facebook.api.FriendOperations;
+import org.springframework.social.facebook.api.PagedList;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +22,12 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String homePage(Model model) {		
-		model.addAttribute("friends", facebook.friendOperations().getFriendProfiles());
+	public String homePage(Model model) {
+		String name = facebook.userOperations().getUserProfile().getName();
+		model.addAttribute("name", name);
+		FriendOperations friendOperations = facebook.friendOperations();
+		PagedList<FacebookProfile> friendProfiles = friendOperations.getFriendProfiles();
+		model.addAttribute("friends", friendProfiles);
 		return "friends";
 	}
 }

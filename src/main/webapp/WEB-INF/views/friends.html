@@ -4,7 +4,7 @@
 		<title>Home</title>
 	</head>
 	<body>
-	<h3>Your Facebook Friends</h3>
+	<h3>Your Facebook Friends for <span th:text="${name}"></span></h3>
 	<ul>
 		<li th:each="friend : ${friends}"><img th:src="'http://graph.facebook.com/' + ${friend.id} + '/picture'" align="middle"/><span th:text="${friend.name}">name</span></li>
 	</ul>	
