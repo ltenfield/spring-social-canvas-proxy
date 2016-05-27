@@ -18,6 +18,7 @@ package org.springframework.social.canvas.config;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,8 +34,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-import org.thymeleaf.templateresolver.TemplateResolver;
 
 /**
  * Spring MVC Configuration.
@@ -62,7 +63,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	public SpringTemplateEngine templateEngine(TemplateResolver templateResolver) {
+	public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
 		templateEngine.setTemplateResolver(templateResolver);
 		templateEngine.addDialect(new SpringSocialDialect());
@@ -70,8 +71,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	public TemplateResolver templateResolver() {
-		TemplateResolver templateResolver = new ServletContextTemplateResolver();
+	public ITemplateResolver templateResolver(ServletContext sc) {
+		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
 		templateResolver.setPrefix("/WEB-INF/views/");
 		templateResolver.setSuffix(".html");
 		templateResolver.setTemplateMode("HTML5");
