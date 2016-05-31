@@ -25,7 +25,7 @@ Modify server.xml for Tomcat 8 to add SSL inbound connector with keystore locati
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="15" SSLEnabled="true" scheme="https" secure="true"
                clientAuth="false" sslProtocol="TLS"
-               keystoreFile="/run/media/user/fedparkdev1/opt/apache-tomcat-8.0.33/keystore/tomcat-keystore.jks"
+               keystoreFile="/run/media/user1/devwork/runtimes/apache-tomcat-8.0.33/keystore/tomcat-keystore.jks"
                keystorePass="mypassword" />
 
 Modify application.properties with facebook parameters

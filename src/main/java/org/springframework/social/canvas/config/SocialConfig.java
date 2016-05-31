@@ -75,11 +75,11 @@ public class SocialConfig implements SocialConfigurer {
     	if (httpClientCentral == null) {
 	    	CredentialsProvider cp = new BasicCredentialsProvider();
 	    	//TODO: place these value in config file via env.getProperty("facebook.appKey")
-	    	cp.setCredentials(new AuthScope("localhost",3128), new UsernamePasswordCredentials("user2","pass2"));
+	    	cp.setCredentials(new AuthScope("171.182.79.221",8080), new UsernamePasswordCredentials("ZSDNT9C","h4O5diWr"));
 	    	
 	    	RequestConfig rc = RequestConfig.custom()
 	    			.setAuthenticationEnabled(true)
-	    			.setProxy(new HttpHost("localhost",3128))
+	    			.setProxy(new HttpHost("171.182.79.221",8080))
 	    			.build();
 	    	
 	    	

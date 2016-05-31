@@ -22,6 +22,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactory;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -36,7 +37,7 @@ import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
  */
 @Configuration
 @ComponentScan(basePackages = "org.springframework.social.canvas", excludeFilters = { @Filter(Configuration.class) })
-@PropertySource("classpath:application.properties")
+@PropertySources(value = {@PropertySource("classpath:application.properties")})
 public class MainConfig {
 
 	@Bean(destroyMethod = "shutdown")

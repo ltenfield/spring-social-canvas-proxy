@@ -54,7 +54,12 @@ public class FacebookServiceProvider extends AbstractOAuth2ServiceProvider<Faceb
 	}
 	
 	public Facebook getApi(String accessToken) {
-		return new FacebookTemplate(accessToken, appNamespace);
+		FacebookTemplate facebookTemplate = new FacebookTemplate(accessToken, appNamespace);
+		if (null != httpClient) {
+			HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
+			facebookTemplate.setRequestFactory(requestFactory);
+		}
+		return facebookTemplate;
 	}
 	
 }
