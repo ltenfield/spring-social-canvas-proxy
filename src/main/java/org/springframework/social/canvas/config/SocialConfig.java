@@ -18,6 +18,15 @@ package org.springframework.social.canvas.config;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -37,7 +46,7 @@ import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
 import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.facebook.connect.FacebookConnectionFactory;
+//import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.facebook.web.CanvasSignInController;
 
 /**
@@ -48,12 +57,51 @@ import org.springframework.social.facebook.web.CanvasSignInController;
 @EnableSocial
 public class SocialConfig implements SocialConfigurer {
 
-	@Inject
-	private DataSource dataSource;
+    private static final int DEFAULT_MAX_TOTAL_CONNECTIONS = 20;
 
-	@Override
+    @Inject
+	private DataSource dataSource;
+	
+	public HttpClient httpClientCentral;
+
+// old factory creation without web proxy
+//	@Override
+//	public void addConnectionFactories(ConnectionFactoryConfigurer cfConfig, Environment env) {
+//		cfConfig.addConnectionFactory(new FacebookConnectionFactory(env.getProperty("facebook.appKey"), env.getProperty("facebook.appSecret")));
+//	}
+
+    @Bean(name="httpClientCentral")
+    public HttpClient getHttpClient() {
+    	if (httpClientCentral == null) {
+	    	CredentialsProvider cp = new BasicCredentialsProvider();
+	    	//TODO: place these value in config file via env.getProperty("facebook.appKey")
+	    	cp.setCredentials(new AuthScope("localhost",3128), new UsernamePasswordCredentials("user2","pass2"));
+	    	
+	    	RequestConfig rc = RequestConfig.custom()
+	    			.setAuthenticationEnabled(true)
+	    			.setProxy(new HttpHost("localhost",3128))
+	    			.build();
+	    	
+	    	
+	    	HttpClientBuilder hcb = HttpClients.custom();
+	        hcb.setMaxConnTotal(DEFAULT_MAX_TOTAL_CONNECTIONS)
+	        .setMaxConnPerRoute(10)
+	        .setDefaultCredentialsProvider(cp)
+	        .setDefaultRequestConfig(rc);
+	        
+	        httpClientCentral = hcb.build();
+    	}
+        
+        return httpClientCentral;
+    }
+
+    @Override
 	public void addConnectionFactories(ConnectionFactoryConfigurer cfConfig, Environment env) {
-		cfConfig.addConnectionFactory(new FacebookConnectionFactory(env.getProperty("facebook.appKey"), env.getProperty("facebook.appSecret")));
+		FacebookConnectionFactory connectionFactory = new FacebookConnectionFactory(
+				env.getProperty("facebook.appKey"),
+				env.getProperty("facebook.appSecret"),
+				getHttpClient());
+		cfConfig.addConnectionFactory(connectionFactory);
 	}
 
 	/**
