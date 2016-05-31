@@ -33,7 +33,10 @@ import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
 /**
  * Main configuration class for the application.
  * Turns on @Component scanning, loads externalized application.properties, and sets up the database.
- * @author Keith Donald
+ * 
+ * Fixed PropertySource annotation to be compatible with J2SE 1.7 from:
+ * https://www.javacodegeeks.com/2013/11/how-to-using-propertysource-annotation-in-spring-4-with-java-7.html
+ * @author Lawrence Turcotte
  */
 @Configuration
 @ComponentScan(basePackages = "org.springframework.social.canvas", excludeFilters = { @Filter(Configuration.class) })
